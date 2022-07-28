@@ -27,7 +27,8 @@ class MissingValues:
 
             if self.count_missing != 0:
                 logger.info('Found a total of {} missing value(s)', self.count_missing)
-                df = df.dropna(how='all')
+
+                #df = df.fillna(-1)#.dropna(how='all')
                 df.reset_index(drop=True)
                 
                 if self.missing_num: # numeric data
@@ -98,7 +99,10 @@ class MissingValues:
             # numerical features
             for feature in df.columns: 
                 if feature in cols_num:
-                    if df[feature].isna().sum().sum() != 0:
+                    if df[feature].isnull().all():
+                        logger.warn(f"all values are nulls for feature {feature}. Imputing with constant -1")
+                        df[feature] = df[feature].fillna(-1)
+                    elif df[feature].isna().sum().sum() != 0:
                         try:
                             df_imputed = pd.DataFrame(imputer.fit_transform(np.array(df[feature]).reshape(-1, 1)))
                             counter = df[feature].isna().sum().sum() - df_imputed.isna().sum().sum()
@@ -400,7 +404,7 @@ class Adjust:
                     if (df[feature].fillna(0) % 1  == 0).all():
                         try:
                             # encode FLOATs with only 0 as decimals to INT
-                            df[feature] = df[feature].fillna(0).astype(np.int64) 
+                            df[feature] = df[feature].fillna(-1).astype(np.int64) 
                             counter += 1
                             logger.debug('Conversion to type INT succeeded for feature "{}"', feature)
                         except Exception as e:
