@@ -100,7 +100,7 @@ class MissingValues:
             for feature in df.columns: 
                 if feature in cols_num:
                     if df[feature].isnull().all():
-                        logger.warn(f"all values are nulls for feature {feature}. Imputing with constant -1")
+                        logger.warning(f"all values are nulls for feature {feature}. Imputing with constant -1")
                         df[feature] = df[feature].fillna(-1)
                     elif df[feature].isna().sum().sum() != 0:
                         try:
