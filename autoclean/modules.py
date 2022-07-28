@@ -107,7 +107,7 @@ class MissingValues:
                                 df[feature] = df_imputed
                                 # round back to INTs, if original data were INTs
                                 df[feature] = df[feature].round()
-                                df[feature] = df[feature].astype('Int64')                                        
+                                df[feature] = df[feature].astype(np.int64)                                      
                             else:
                                 df[feature] = df_imputed
                             if counter != 0:
@@ -131,7 +131,7 @@ class MissingValues:
                             # round to integers before mapping back to original values
                             df[feature] = df_imputed
                             df[feature] = df[feature].round()
-                            df[feature] = df[feature].astype('Int64')  
+                            df[feature] = df[feature].astype(np.int64)  
 
                             # map values back to original
                             mappings_inv = {v: k for k, v in mapping[feature].items()}
@@ -178,7 +178,7 @@ class MissingValues:
                         if (df[feature].fillna(-9999) % 1  == 0).all():
                             # round back to INTs, if original data were INTs
                             test_df[feature] = test_df[feature].round()
-                            test_df[feature] = test_df[feature].astype('Int64')
+                            test_df[feature] = test_df[feature].astype(np.int64) 
                             df[feature].update(test_df[feature])                          
                         else:
                             df[feature].update(test_df[feature])  
@@ -227,7 +227,7 @@ class MissingValues:
                         if (df[feature].fillna(-9999) % 1  == 0).all():
                             # round back to INTs, if original data were INTs
                             test_df[feature] = test_df[feature].round()
-                            test_df[feature] = test_df[feature].astype('Int64')
+                            test_df[feature] = test_df[feature].astype(np.int64) 
                             df[feature].update(test_df[feature])                             
                         logger.debug('LOGREG imputation of {} value(s) succeeded for feature "{}"', len(pred), feature)
                 except:
@@ -289,14 +289,14 @@ class Outliers:
                     if row_val < lower_bound:
                         if (df[feature].fillna(-9999) % 1  == 0).all():
                                 df.loc[row_index, feature] = lower_bound
-                                df[feature] = df[feature].astype(int) 
+                                df[feature] = df[feature].astype(np.int64) 
                         else:    
                             df.loc[row_index, feature] = lower_bound
                         counter += 1
                     else:
                         if (df[feature].fillna(-9999) % 1  == 0).all():
                             df.loc[row_index, feature] = upper_bound
-                            df[feature] = df[feature].astype(int) 
+                            df[feature] = df[feature].astype(np.int64) 
                         else:
                             df.loc[row_index, feature] = upper_bound
                         counter += 1
@@ -399,14 +399,14 @@ class Adjust:
                     if (df[feature].fillna(-9999) % 1  == 0).all():
                         try:
                             # encode FLOATs with only 0 as decimals to INT
-                            df[feature] = df[feature].astype('Int64')
+                            df[feature] = df[feature].astype(np.int64) 
                             counter += 1
                             logger.debug('Conversion to type INT succeeded for feature "{}"', feature)
                         except:
                             logger.warning('Conversion to type INT failed for feature "{}"', feature)
                     else:
                         try:
-                            df[feature] = df[feature].astype(float)
+                            df[feature] = df[feature].astype(np.float64)
                             # round the number of decimals of FLOATs back to original
                             dec = None
                             for value in input_data[feature]:
