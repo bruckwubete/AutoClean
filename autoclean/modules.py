@@ -402,8 +402,8 @@ class Adjust:
                             df[feature] = df[feature].astype(np.int64) 
                             counter += 1
                             logger.debug('Conversion to type INT succeeded for feature "{}"', feature)
-                        except:
-                            logger.warning('Conversion to type INT failed for feature "{}"', feature)
+                        except Exception as e:
+                            logger.warning(f'Conversion to type INT failed for feature "{feature}" due to {str(e)}')
                     else:
                         try:
                             df[feature] = df[feature].astype(np.float64)
@@ -421,8 +421,8 @@ class Adjust:
                             df[feature] = df[feature].round(decimals = dec)
                             counter += 1
                             logger.debug('Conversion to type FLOAT succeeded for feature "{}"', feature)
-                        except:
-                            logger.warning('Conversion to type FLOAT failed for feature "{}"', feature)
+                        except Exception as e:
+                            logger.warning(f'Conversion to type FLOAT failed for feature "{feature}" due to {str(e)}')
             end = timer()
             logger.info('Completed feature type conversion for {} feature(s) in {} seconds', counter, round(end-start, 6))
         else:
