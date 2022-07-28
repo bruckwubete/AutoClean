@@ -112,8 +112,8 @@ class MissingValues:
                                 df[feature] = df_imputed
                             if counter != 0:
                                 logger.debug('{} imputation of {} value(s) succeeded for feature "{}"', str(self.missing_num).upper(), counter, feature)
-                        except:
-                            logger.warning('{} imputation failed for feature "{}"', str(self.missing_num).upper(), feature)
+                        except Exception as e:
+                            logger.warning(f'{str(self.missing_num).upper()} imputation failed for feature "{feature}" due to {str(e)}')
         else:
             # categorical features
             for feature in df.columns:
@@ -396,10 +396,11 @@ class Adjust:
             cols_num = df.select_dtypes(include=np.number).columns
             for feature in cols_num:
                     # check if all values are integers
-                    if (df[feature].fillna(-9999) % 1  == 0).all():
+                    # TODO: user should specify fillna value
+                    if (df[feature].fillna(0) % 1  == 0).all():
                         try:
                             # encode FLOATs with only 0 as decimals to INT
-                            df[feature] = df[feature].astype(np.int64) 
+                            df[feature] = df[feature].fillna(0).astype(np.int64) 
                             counter += 1
                             logger.debug('Conversion to type INT succeeded for feature "{}"', feature)
                         except Exception as e:
